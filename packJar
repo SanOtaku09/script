@@ -1,0 +1,25 @@
+#!/bin/bash
+working_dir=$PWD
+script_path="${BASH_SOURCE[0]}"
+script_path="${script_path:0:${#script_path}-7}build.gradle.kts"
+if [ -f "$working_dir/build.gradle.kts" ] ; then   
+    edited=$(grep \"Main-Class\"\ to build.gradle.kts )
+    if [ ${#edited} = 0 ] ; then
+        echo "Replacing build file"
+        cp $script_path "${working_dir}/temp"
+        mainClass=$( grep mainClass $working_dir/build.gradle.kts )
+        if [ ${#mainClass} = 0 ] ; then
+            echo "Not kotlin project"
+            exit
+        fi
+        mainClass=${mainClass:18}
+        mainClass=${mainClass:0:${#mainClass}-1}
+        original="\"Main-Class\"\ to\ null"
+        new="\"Main-Class\"\ to\ $mainClass"
+        sed -i "s/$original/$new/g" temp
+        mv temp build.gradle.kts
+    fi
+    gradle packJar
+else
+    echo "Build file not found"
+fi

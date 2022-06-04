@@ -1,19 +1,69 @@
 #!/bin/bash
-echo "Enter sudo password"
-read -s password
-if [ ${#password} -gt 0 ]; then
-       echo "upgrading debian packages"
-       echo $password | sudo apt update
-       echo $password | sudo apt upgrade -y
-       echo "packages upgrade done"
-       echo "apt clean up task"
-       echo $password | sudo apt auto-remove -y
-       echo $password | sudo apt auto-clean -y
-       echo "apt clean up done"
+if ! [ -f notFirst ] ; then
+       echo "Root permission are required to perform upgrade"
+       echo "For packages manager such as apt dnf snap"
+       echo "To skip press enter"
+       touch notFirst
 fi
 
-echo "upgrading flatpak packages"
-flatpak update -y
-echo "flatpak update done"
+echo "Enter password "
+exit | sudo su
+
 clear
-neofetch
+
+APT=$(command -v apt)
+if [ ${#APT} -gt 0 ] ; then
+echo "Updating apt"
+       sudo apt update
+       echo "Update complete"
+       clear
+       echo "Upgrading packages"
+       sudo apt upgrade -y
+       clear
+       echo "Clean Task"
+       sudo apt auto-remove
+       sudo apt auto-clean
+       clear
+fi
+
+DNF=$(command -v dnf)
+
+if [ ${#DNF} -gt 0 ] ; then
+       echo "Updating dnf"
+       sudo dnf upgrade -y
+       echo "Update complete"
+       clear
+fi
+
+SNAP=$(command -v snap)
+
+if [ ${#SNAP} -gt 0 ] ; then
+       echo "Updating snap"
+       sudo snap update -y
+       echo "Update complete"
+       clear
+fi
+
+PACMAN=$(command -v pacman)
+
+if [ ${#PACMAN} -gt 0 ] ; then
+       echo "Updating pacman"
+       sudo pacman -Syu
+       echo "Update complete"
+       clear
+fi
+
+FlATPAK=$(command -v flatpak)
+
+if [ ${#FlATPAK} -gt 0 ] ; then
+       echo "Updating flatpaks"
+       flatpak update -y
+       echo "Update complete"
+       clear
+fi
+
+
+NEOFETCH=$(command -v neofetch)
+if [ ${#FlATPAK} -gt 0 ] ; then
+       neofetch
+fi

@@ -1,0 +1,19 @@
+#!/bin/bash
+echo "Enter sudo password"
+read -s password
+if [ ${#password} -gt 0 ]; then
+       echo "upgrading debian packages"
+       echo $password | sudo apt update
+       echo $password | sudo apt upgrade -y
+       echo "packages upgrade done"
+       echo "apt clean up task"
+       echo $password | sudo apt auto-remove -y
+       echo $password | sudo apt auto-clean -y
+       echo "apt clean up done"
+fi
+
+echo "upgrading flatpak packages"
+flatpak update -y
+echo "flatpak update done"
+clear
+neofetch

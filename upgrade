@@ -1,9 +1,11 @@
 #!/bin/bash
-if ! [ -f notFirst ] ; then
+notFirst="${BASH_SOURCE[0]}"
+notFirst="${notFirst:0:${#notFirst}-8}/notFirst"
+if ! [ -f $notFirst ] ; then
        echo "Root permission are required to perform upgrade"
        echo "For packages manager such as apt dnf snap"
        echo "To skip press enter"
-       touch notFirst
+       touch $notFirst
 fi
 
 echo "Enter password "

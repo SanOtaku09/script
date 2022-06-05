@@ -12,7 +12,10 @@ if [ "$is_already_setup" == "" ] ; then
     echo "make script executable"
     chmod -R +x $path
     echo "Done"
-    exit
+    echo ""
+    echo ""
+    echo ""
+    echo "-----------Restart terminal----------"
 else
     echo "Path has already been added"
 fi

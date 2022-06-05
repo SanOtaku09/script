@@ -14,6 +14,8 @@ chmod +x setup.sh
 
 ./setup.sh
 
+restart terminal
+
 # upgrade
 
 For upgrading Linux based system

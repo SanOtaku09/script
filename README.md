@@ -2,6 +2,18 @@
 
 Some script that's i use on to make life simple 
 
+# setup.sh
+
+to add path of script
+
+git clone repository where ever you like
+
+cd to cloned folder
+
+chmod +x setup.sh
+
+./setup.sh
+
 # upgrade
 
 For upgrading Linux based system

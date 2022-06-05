@@ -21,5 +21,19 @@ if [ -f "$working_dir/build.gradle.kts" ] ; then
     fi
     gradle packJar
 else
-    echo "Build file not found"
+    cd $working_dir
+    if [ -f settings.gradle.kts ] ; then
+        Project=$(gradle project | grep Project )
+        Project=($Project)
+        for Dir in ${Project[@]}
+        do
+            if [ "${Dir:0:2}" = "':" ] && [ "${Dir:${#Dir}-1:${#Dir}-1}" = \' ] ; then
+                cd ${Dir:2:${#Dir}-3}
+                packJar
+                cd ..
+            fi
+        done
+    else
+        echo "Build file not found"
+    fi
 fi

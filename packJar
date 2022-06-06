@@ -33,6 +33,23 @@ if [ -f "$working_dir/build.gradle.kts" ] ; then
         echo "Adding main class path to custom build file"
         sed -i "s/\"Main-Class\"\ to\ null/\"Main-Class\"\ to\ $mainClass/g" "$working_dir/custom_build_file.kts"
         echo "Done"
+        echo "Adding dependencies"
+        dependecy=$(grep implementation\( "$working_dir/build.gradle.kts" )
+	dependencies=($dependecy)
+	testDependency=$(grep testImplementation\( "$working_dir/build.gradle.kts" )
+	testDependencies=($testDependency)
+	allDependencies="dependencies\ {"
+	for dependency in ${dependencies[@]}
+	do
+	    echo $dependency
+	    allDependencies="$allDependencies\n\ \ \ \ $dependency"
+	done
+	for dependency in ${testDependencies[@]}
+	do
+	    echo $dependency
+	    allDependencies="$allDependencies\n\ \ \ \ $dependency"
+	done
+	sed -i "s/dependencies\ {/$allDependencies/g" "$working_dir/custom_build_file.kts"
         echo "Rename file"
         mv "$working_dir/custom_build_file.kts" "$working_dir/build.gradle.kts"
         echo "Done"

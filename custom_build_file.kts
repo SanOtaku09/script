@@ -1,3 +1,8 @@
+import java.io.File
+import java.io.FileOutputStream
+import java.net.URL
+import java.nio.channels.Channels
+
 val projectAttributes = mapOf(
     "Main-Class" to null ,
     "Project-Name" to "${projectDir.toString().let{it.substring( it.lastIndexOf("/")+1 )}}" ,
@@ -5,6 +10,28 @@ val projectAttributes = mapOf(
     "Extracted-Files" to "extractedFiles" ,
     "Output-Path" to "jar"
 )
+
+fun download( url : String ) : String {
+    val path = "$rootDir/external-downloaded-lib/"
+    val fileName = url.substring( url.lastIndexOf( "/" )+1 )
+    val file = "$path$fileName"
+    if ( File( file ).isFile ) return file
+    if ( ! File( path ).isDirectory ) File( path ).mkdirs()
+    try {
+        URL( url ).openStream().use {
+            Channels.newChannel( it ).use { rbc ->
+                FileOutputStream( file ).use { fos ->
+                    fos.channel.transferFrom( rbc , 0 , Long.MAX_VALUE )
+
+                }
+            }
+        }
+    } catch ( e : Exception ) {
+        throw Exception( "Failed To Download Lib : $file" )
+    }
+    while ( ! File( file ).isFile ) Thread.sleep( 100 )
+    return file
+}
 
 plugins {
     id("org.jetbrains.kotlin.jvm") version "1.6.0"
